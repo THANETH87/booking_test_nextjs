@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bunx create-next-app@latest . --app --tailwind --typescript --eslint --src-dir --import-alias \"@/*\" --turbopack --use-bun)"
+    ]
+  }
+}
