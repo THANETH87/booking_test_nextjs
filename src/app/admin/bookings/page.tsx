@@ -4,6 +4,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useToast } from "@/app/components/Toast";
 import { BookingTable } from "@/app/components/BookingTable";
+import { ManualBookingModal } from "@/app/components/ManualBookingModal";
 
 const STATUSES = ["ALL", "PENDING", "CONFIRMED", "IN_PROGRESS", "COMPLETED", "CANCELLED"] as const;
 
@@ -13,12 +14,21 @@ export default function AdminBookingsPage() {
   const [status, setStatus] = useState<string>("ALL");
   const [date, setDate] = useState("");
   const [page, setPage] = useState(1);
+  const [showManual, setShowManual] = useState(false);
 
   const bookingsQuery = trpc.booking.getAll.useQuery({
     status: status === "ALL" ? undefined : (status as "PENDING"),
     date: date || undefined,
     page,
     limit: 20,
+  });
+
+  const deleteMutation = trpc.booking.delete.useMutation({
+    onSuccess: () => {
+      toast("Booking deleted", "success");
+      utils.booking.getAll.invalidate();
+    },
+    onError: (err) => toast(err.message, "error"),
   });
 
   const updateStatusMutation = trpc.booking.updateStatus.useMutation({
@@ -33,9 +43,17 @@ export default function AdminBookingsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        All Bookings
-      </h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          All Bookings
+        </h1>
+        <button
+          onClick={() => setShowManual(true)}
+          className="rounded-xl gradient-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary/25"
+        >
+          + Manual Booking
+        </button>
+      </div>
 
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -94,7 +112,8 @@ export default function AdminBookingsPage() {
                 status: s as "PENDING",
               })
             }
-            isUpdating={updateStatusMutation.isPending}
+            onDelete={(id) => deleteMutation.mutate({ bookingId: id })}
+            isUpdating={updateStatusMutation.isPending || deleteMutation.isPending}
           />
 
           {/* Pagination */}
@@ -120,6 +139,9 @@ export default function AdminBookingsPage() {
             </div>
           )}
         </>
+      )}
+      {showManual && (
+        <ManualBookingModal isOpen onClose={() => setShowManual(false)} />
       )}
     </div>
   );
