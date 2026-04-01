@@ -9,7 +9,7 @@ export async function proxy(request: NextRequest) {
   const token = request.cookies.get("auth-token")?.value;
 
   // Public routes
-  if (pathname === "/" || pathname === "/login" || pathname === "/register") {
+  if (pathname === "/" || pathname === "/login" || pathname === "/register" || pathname === "/cancel") {
     if (token && (pathname === "/login" || pathname === "/register")) {
       try {
         await jwtVerify(token, secret);
