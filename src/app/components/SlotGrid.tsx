@@ -13,6 +13,7 @@ interface SlotGridProps {
   slots: Slot[];
   selectedSlotId: number | null;
   onSelect: (slotId: number) => void;
+  onJoinWaitlist?: (slotId: number) => void;
   isLoading?: boolean;
 }
 
@@ -20,6 +21,7 @@ export function SlotGrid({
   slots,
   selectedSlotId,
   onSelect,
+  onJoinWaitlist,
   isLoading,
 }: SlotGridProps) {
   if (isLoading) {
@@ -28,7 +30,7 @@ export function SlotGrid({
         {Array.from({ length: 22 }).map((_, i) => (
           <div
             key={i}
-            className="h-12 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800"
+            className="h-14 animate-pulse rounded-xl bg-border/50"
           />
         ))}
       </div>
@@ -37,9 +39,9 @@ export function SlotGrid({
 
   if (slots.length === 0) {
     return (
-      <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
-        No slots available for this date.
-      </p>
+      <div className="rounded-2xl border border-border bg-surface-secondary p-8 text-center">
+        <p className="text-sm text-muted">No slots available for this date.</p>
+      </div>
     );
   }
 
@@ -54,17 +56,25 @@ export function SlotGrid({
             key={slot.id}
             onClick={() => !disabled && onSelect(slot.id)}
             disabled={disabled}
-            className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
+            className={`rounded-xl border-2 px-3 py-3 text-sm font-semibold transition-all ${
               selected
-                ? "border-green-600 bg-green-600 text-white"
+                ? "border-primary bg-primary text-white shadow-lg shadow-primary/25 scale-[1.02]"
                 : disabled
                   ? slot.isBlocked
-                    ? "cursor-not-allowed border-red-200 bg-red-50 text-red-400 dark:border-red-900 dark:bg-red-950 dark:text-red-600"
-                    : "cursor-not-allowed border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-600"
-                  : "border-green-200 bg-green-50 text-green-700 hover:border-green-400 hover:bg-green-100 dark:border-green-900 dark:bg-green-950 dark:text-green-400 dark:hover:border-green-700"
+                    ? "cursor-not-allowed border-red-200 bg-red-50 text-red-300 dark:border-red-900 dark:bg-red-950/50 dark:text-red-700"
+                    : "cursor-not-allowed border-transparent bg-surface-secondary text-foreground/25"
+                  : "border-transparent bg-surface text-foreground shadow-sm hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5"
             }`}
           >
             {slot.startTime}
+            {slot.isBooked && !slot.isBlocked && !slot.isPast && onJoinWaitlist && (
+              <span
+                onClick={(e) => { e.stopPropagation(); onJoinWaitlist(slot.id); }}
+                className="mt-1 block cursor-pointer text-[10px] font-medium text-primary hover:underline"
+              >
+                Waitlist
+              </span>
+            )}
           </button>
         );
       })}

@@ -22,6 +22,7 @@ interface BookingRow {
 interface BookingTableProps {
   bookings: BookingRow[];
   onUpdateStatus: (bookingId: number, status: string) => void;
+  onDelete?: (bookingId: number) => void;
   isUpdating?: boolean;
 }
 
@@ -53,6 +54,7 @@ const nextStatus: Record<string, { label: string; value: string }[]> = {
 export function BookingTable({
   bookings,
   onUpdateStatus,
+  onDelete,
   isUpdating,
 }: BookingTableProps) {
   if (bookings.length === 0) {
@@ -128,6 +130,17 @@ export function BookingTable({
                         {action.label}
                       </button>
                     ))}
+                    {onDelete && (
+                      <button
+                        onClick={() => {
+                          if (confirm(`Delete booking #${b.id}?`)) onDelete(b.id);
+                        }}
+                        disabled={isUpdating}
+                        className="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-200 disabled:opacity-50 dark:bg-red-900 dark:text-red-300"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -163,24 +176,33 @@ export function BookingTable({
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
               {b.user.phone}
             </p>
-            {(nextStatus[b.status] ?? []).length > 0 && (
-              <div className="mt-3 flex gap-2">
-                {(nextStatus[b.status] ?? []).map((action) => (
-                  <button
-                    key={action.value}
-                    onClick={() => onUpdateStatus(b.id, action.value)}
-                    disabled={isUpdating}
-                    className={`rounded px-3 py-1.5 text-xs font-medium disabled:opacity-50 ${
-                      action.value === "CANCELLED"
-                        ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                        : "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
-                    }`}
-                  >
-                    {action.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="mt-3 flex gap-2">
+              {(nextStatus[b.status] ?? []).map((action) => (
+                <button
+                  key={action.value}
+                  onClick={() => onUpdateStatus(b.id, action.value)}
+                  disabled={isUpdating}
+                  className={`rounded px-3 py-1.5 text-xs font-medium disabled:opacity-50 ${
+                    action.value === "CANCELLED"
+                      ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+                      : "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                  }`}
+                >
+                  {action.label}
+                </button>
+              ))}
+              {onDelete && (
+                <button
+                  onClick={() => {
+                    if (confirm(`Delete booking #${b.id}?`)) onDelete(b.id);
+                  }}
+                  disabled={isUpdating}
+                  className="rounded bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300"
+                >
+                  Delete
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>

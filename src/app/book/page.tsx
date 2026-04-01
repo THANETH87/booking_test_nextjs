@@ -10,10 +10,23 @@ import { SlotGrid } from "@/app/components/SlotGrid";
 export default function BookPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [tab, setTab] = useState<"member" | "guest">("member");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+
+  // Guest form state
+  const [guestForm, setGuestForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  });
+  const [guestSuccess, setGuestSuccess] = useState<string | null>(null);
+
+  const holidaysQuery = trpc.slot.getHolidayDates.useQuery();
+  const holidays = holidaysQuery.data?.map((h) => h.date) ?? [];
 
   const slotsQuery = trpc.slot.getAvailable.useQuery(
     { date: selectedDate! },
@@ -25,12 +38,24 @@ export default function BookPage() {
       toast("Booking confirmed!", "success");
       router.push("/my-bookings");
     },
-    onError: (err) => {
-      toast(err.message, "error");
+    onError: (err) => toast(err.message, "error"),
+  });
+
+  const guestBookMutation = trpc.guest.create.useMutation({
+    onSuccess: (data) => {
+      toast("Booking confirmed! Check your email.", "success");
+      setGuestSuccess(data.cancelToken);
     },
+    onError: (err) => toast(err.message, "error"),
+  });
+
+  const waitlistMutation = trpc.waitlist.join.useMutation({
+    onSuccess: () => toast("Added to waitlist! We'll notify you if a spot opens.", "success"),
+    onError: (err) => toast(err.message, "error"),
   });
 
   const selectedSlot = slotsQuery.data?.find((s) => s.id === selectedSlotId);
+  const availableCount = slotsQuery.data?.filter((s) => !s.isBlocked && !s.isBooked && !s.isPast).length ?? 0;
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
@@ -45,50 +70,113 @@ export default function BookPage() {
 
   const handleBook = () => {
     if (!selectedSlotId) return;
-    bookMutation.mutate({
-      slotId: selectedSlotId,
-      note: note.trim() || undefined,
-    });
+    if (tab === "member") {
+      bookMutation.mutate({ slotId: selectedSlotId, note: note.trim() || undefined });
+    } else {
+      guestBookMutation.mutate({
+        ...guestForm,
+        slotId: selectedSlotId,
+        note: note.trim() || undefined,
+      });
+    }
   };
+
+  const inputClass = "w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-foreground shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20";
+
+  if (guestSuccess) {
+    return (
+      <div className="mx-auto w-full max-w-lg px-4 py-16 text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900">
+          <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-foreground">Booking Confirmed!</h1>
+        <p className="mt-2 text-muted">A confirmation email has been sent. You can cancel anytime using the link in your email.</p>
+        <button
+          onClick={() => { setGuestSuccess(null); setSelectedSlotId(null); setShowConfirm(false); setGuestForm({ firstName: "", lastName: "", email: "", phone: "" }); setNote(""); }}
+          className="mt-6 rounded-xl gradient-primary px-6 py-2.5 text-sm font-medium text-white shadow-md shadow-primary/25"
+        >
+          Book Another
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Book an Appointment
-      </h1>
-
-      {/* Step 1: Select date */}
       <div className="mb-8">
-        <h2 className="mb-3 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-          1. Select a date
-        </h2>
-        <DatePicker selectedDate={selectedDate} onSelect={handleDateSelect} />
+        <h1 className="text-3xl font-bold text-foreground">Book an Appointment</h1>
+        <p className="mt-1 text-muted">Pick your preferred date and time</p>
       </div>
 
-      {/* Step 2: Select time slot */}
+      {/* Tabs: Member / Guest */}
+      <div className="mb-8 flex gap-1 rounded-xl bg-surface-secondary p-1">
+        {(["member", "guest"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => { setTab(t); setSelectedSlotId(null); setShowConfirm(false); }}
+            className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition-all ${
+              tab === t ? "bg-surface text-foreground shadow-sm" : "text-muted"
+            }`}
+          >
+            {t === "member" ? "Member Booking" : "Guest Booking"}
+          </button>
+        ))}
+      </div>
+
+      {/* Guest info form */}
+      {tab === "guest" && (
+        <div className="animate-slide-up mb-8 rounded-2xl border border-border bg-surface p-6">
+          <h2 className="mb-4 text-lg font-semibold text-foreground">Your Information</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <input placeholder="First Name *" value={guestForm.firstName} onChange={(e) => setGuestForm((f) => ({ ...f, firstName: e.target.value }))} className={inputClass} />
+            <input placeholder="Last Name *" value={guestForm.lastName} onChange={(e) => setGuestForm((f) => ({ ...f, lastName: e.target.value }))} className={inputClass} />
+            <input placeholder="Email *" type="email" value={guestForm.email} onChange={(e) => setGuestForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} />
+            <input placeholder="Phone * (0XXXXXXXXX)" value={guestForm.phone} onChange={(e) => setGuestForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} />
+          </div>
+        </div>
+      )}
+
+      {/* Step 1: Date */}
+      <div className="mb-10">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full gradient-primary text-sm font-bold text-white">1</div>
+          <h2 className="text-lg font-semibold text-foreground">Select a date</h2>
+        </div>
+        <DatePicker selectedDate={selectedDate} onSelect={handleDateSelect} holidays={holidays} />
+      </div>
+
+      {/* Step 2: Time */}
       {selectedDate && (
-        <div className="mb-8">
-          <h2 className="mb-3 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            2. Select a time
-          </h2>
-          <div className="mb-2 flex gap-4 text-xs text-zinc-500 dark:text-zinc-400">
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded border border-green-300 bg-green-50" />{" "}
-              Available
+        <div className="animate-slide-up mb-10">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full gradient-primary text-sm font-bold text-white">2</div>
+              <h2 className="text-lg font-semibold text-foreground">Choose a time</h2>
+            </div>
+            {!slotsQuery.isLoading && (
+              <span className="text-sm text-muted">{availableCount} available</span>
+            )}
+          </div>
+
+          <div className="mb-3 flex gap-4 text-xs text-muted">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-3 w-3 rounded-md border border-transparent bg-surface shadow-sm" /> Available
             </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded border border-zinc-300 bg-zinc-100" />{" "}
-              Booked
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-3 w-3 rounded-md bg-surface-secondary" /> Taken
             </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded border border-red-300 bg-red-50" />{" "}
-              Blocked
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-3 w-3 rounded-md border border-red-200 bg-red-50" /> Blocked
             </span>
           </div>
+
           <SlotGrid
             slots={slotsQuery.data ?? []}
             selectedSlotId={selectedSlotId}
             onSelect={handleSlotSelect}
+            onJoinWaitlist={tab === "member" ? (slotId) => waitlistMutation.mutate({ slotId }) : undefined}
             isLoading={slotsQuery.isLoading}
           />
         </div>
@@ -96,47 +184,53 @@ export default function BookPage() {
 
       {/* Step 3: Confirm */}
       {showConfirm && selectedSlot && (
-        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="mb-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            3. Confirm your booking
-          </h2>
+        <div className="animate-slide-up">
           <div className="mb-4 flex items-center gap-3">
-            <div className="rounded-lg bg-zinc-900 px-4 py-2 text-white dark:bg-zinc-50 dark:text-zinc-900">
-              <span className="text-lg font-bold">{selectedSlot.startTime}</span>
-              <span className="mx-1 text-sm">-</span>
-              <span className="text-lg font-bold">{selectedSlot.endTime}</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full gradient-primary text-sm font-bold text-white">3</div>
+            <h2 className="text-lg font-semibold text-foreground">Confirm booking</h2>
+          </div>
+
+          <div className="rounded-2xl border border-primary/20 bg-surface-secondary p-6">
+            <div className="mb-5 flex items-center gap-4">
+              <div className="rounded-2xl gradient-primary px-5 py-3 text-white shadow-lg shadow-primary/25">
+                <span className="text-2xl font-bold">{selectedSlot.startTime}</span>
+                <span className="mx-1.5 text-white/60">-</span>
+                <span className="text-2xl font-bold">{selectedSlot.endTime}</span>
+              </div>
+              <div>
+                <p className="font-medium text-foreground">
+                  {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+                <p className="text-sm text-muted">30-minute appointment</p>
+              </div>
             </div>
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", {
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              })}
-            </span>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="note"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+
+            <div className="mb-5">
+              <label htmlFor="note" className="mb-1.5 block text-sm font-medium text-foreground/80">
+                Note (optional)
+              </label>
+              <input
+                id="note"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                maxLength={500}
+                className={inputClass}
+                placeholder="Any special requests..."
+              />
+            </div>
+
+            <button
+              onClick={handleBook}
+              disabled={bookMutation.isPending || guestBookMutation.isPending}
+              className="w-full rounded-xl gradient-primary py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50 sm:w-auto sm:px-8"
             >
-              Note (optional)
-            </label>
-            <input
-              id="note"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              maxLength={500}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-              placeholder="Any special requests..."
-            />
+              {(bookMutation.isPending || guestBookMutation.isPending) ? "Booking..." : "Confirm Booking"}
+            </button>
           </div>
-          <button
-            onClick={handleBook}
-            disabled={bookMutation.isPending}
-            className="rounded-lg bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-50"
-          >
-            {bookMutation.isPending ? "Booking..." : "Confirm Booking"}
-          </button>
         </div>
       )}
     </div>

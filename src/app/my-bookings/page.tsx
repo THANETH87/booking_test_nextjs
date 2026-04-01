@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useToast } from "@/app/components/Toast";
 import { BookingCard } from "@/app/components/BookingCard";
+import { RescheduleModal } from "@/app/components/RescheduleModal";
 
 export default function MyBookingsPage() {
   const { toast } = useToast();
   const utils = trpc.useUtils();
+  const [reschedule, setReschedule] = useState<{ bookingId: number; slotId: number } | null>(null);
 
   const bookingsQuery = trpc.booking.getMyBookings.useQuery();
 
@@ -22,30 +26,40 @@ export default function MyBookingsPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        My Bookings
-      </h1>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">My Bookings</h1>
+          <p className="mt-1 text-muted">Track and manage your appointments</p>
+        </div>
+        <Link
+          href="/book"
+          className="rounded-xl gradient-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary/25 transition-all hover:shadow-lg"
+        >
+          + New Booking
+        </Link>
+      </div>
 
       {bookingsQuery.isLoading ? (
         <div className="flex flex-col gap-3">
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-24 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800"
-            />
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-border/30" />
           ))}
         </div>
       ) : bookingsQuery.data?.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-zinc-500 dark:text-zinc-400">
-            You don&apos;t have any bookings yet.
-          </p>
-          <a
+        <div className="rounded-2xl border border-border bg-surface-secondary py-16 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+            <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <p className="text-foreground font-medium">No bookings yet</p>
+          <p className="mt-1 text-sm text-muted">Book your first appointment today!</p>
+          <Link
             href="/book"
-            className="mt-3 inline-block text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+            className="mt-4 inline-block rounded-xl gradient-primary px-6 py-2.5 text-sm font-medium text-white shadow-md shadow-primary/25"
           >
-            Book an appointment
-          </a>
+            Book Now
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -54,10 +68,20 @@ export default function MyBookingsPage() {
               key={booking.id}
               booking={booking}
               onCancel={(id) => cancelMutation.mutate({ bookingId: id })}
+              onReschedule={(id, slotId) => setReschedule({ bookingId: id, slotId })}
               isCancelling={cancelMutation.isPending}
             />
           ))}
         </div>
+      )}
+
+      {reschedule && (
+        <RescheduleModal
+          isOpen
+          onClose={() => setReschedule(null)}
+          bookingId={reschedule.bookingId}
+          currentSlotId={reschedule.slotId}
+        />
       )}
     </div>
   );

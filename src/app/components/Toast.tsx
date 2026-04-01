@@ -24,6 +24,30 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 let nextId = 0;
 
+const icons: Record<ToastType, ReactNode> = {
+  success: (
+    <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  ),
+  error: (
+    <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  ),
+  info: (
+    <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+};
+
+const colors: Record<ToastType, string> = {
+  success: "bg-green-600 shadow-green-600/20",
+  error: "bg-red-600 shadow-red-600/20",
+  info: "bg-primary shadow-primary/20",
+};
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -32,7 +56,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
+    }, 3500);
   }, []);
 
   return (
@@ -42,14 +66,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg transition-all animate-in fade-in slide-in-from-bottom-2 ${
-              t.type === "success"
-                ? "bg-green-600"
-                : t.type === "error"
-                  ? "bg-red-600"
-                  : "bg-blue-600"
-            }`}
+            className={`animate-in flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg ${colors[t.type]}`}
           >
+            {icons[t.type]}
             {t.message}
           </div>
         ))}
