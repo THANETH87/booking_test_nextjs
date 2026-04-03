@@ -15,7 +15,7 @@ function CancelContent() {
   const cancelMutation = trpc.guest.cancelByToken.useMutation({
     onSuccess: () => {
       setCancelled(true);
-      toast("Booking cancelled successfully", "success");
+      toast("ยกเลิกการจองสำเร็จ", "success");
     },
     onError: (err) => {
       toast(err.message, "error");
@@ -26,10 +26,10 @@ function CancelContent() {
     return (
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">Invalid Link</h1>
-          <p className="mt-2 text-muted">No cancellation token provided.</p>
+          <h1 className="text-2xl font-bold text-foreground">ลิงก์ไม่ถูกต้อง</h1>
+          <p className="mt-2 text-muted">ไม่พบโทเค็นสำหรับยกเลิก</p>
           <Link href="/" className="mt-4 inline-block text-primary hover:underline">
-            Go to homepage
+            กลับหน้าแรก
           </Link>
         </div>
       </div>
@@ -45,13 +45,13 @@ function CancelContent() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Booking Cancelled</h1>
-          <p className="mt-2 text-muted">Your booking has been successfully cancelled.</p>
+          <h1 className="text-2xl font-bold text-foreground">ยกเลิกการจองแล้ว</h1>
+          <p className="mt-2 text-muted">การจองของคุณถูกยกเลิกเรียบร้อยแล้ว</p>
           <Link
             href="/book"
             className="mt-6 inline-block rounded-xl gradient-primary px-6 py-2.5 text-sm font-medium text-white shadow-md shadow-primary/25"
           >
-            Book Again
+            จองใหม่
           </Link>
         </div>
       </div>
@@ -66,9 +66,9 @@ function CancelContent() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
-        <h1 className="text-xl font-bold text-foreground">Cancel Booking?</h1>
+        <h1 className="text-xl font-bold text-foreground">ยกเลิกการจอง?</h1>
         <p className="mt-2 text-sm text-muted">
-          Are you sure you want to cancel this booking? This action cannot be undone.
+          คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้
         </p>
         <div className="mt-6 flex flex-col gap-3">
           <button
@@ -76,13 +76,13 @@ function CancelContent() {
             disabled={cancelMutation.isPending}
             className="rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 disabled:opacity-50"
           >
-            {cancelMutation.isPending ? "Cancelling..." : "Yes, Cancel Booking"}
+            {cancelMutation.isPending ? "กำลังยกเลิก..." : "ใช่ ยกเลิกการจอง"}
           </button>
           <Link
             href="/"
             className="rounded-xl border border-border py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-surface-secondary"
           >
-            Never mind
+            ไม่เป็นไร
           </Link>
         </div>
       </div>

@@ -65,8 +65,8 @@ export default function AdminAnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Analytics</h1>
-        <p className="mt-1 text-muted">Booking insights and trends</p>
+        <h1 className="text-3xl font-bold text-foreground">วิเคราะห์</h1>
+        <p className="mt-1 text-muted">ข้อมูลเชิงลึกและแนวโน้มการจอง</p>
       </div>
 
       {/* Date range controls */}
@@ -81,7 +81,7 @@ export default function AdminAnalyticsPage() {
                 : "bg-surface text-foreground/60 shadow-sm hover:bg-surface-secondary"
             }`}
           >
-            {p === "week" ? "This Week" : p === "month" ? "This Month" : p === "lastMonth" ? "Last Month" : "Custom"}
+            {p === "week" ? "สัปดาห์นี้" : p === "month" ? "เดือนนี้" : p === "lastMonth" ? "เดือนที่แล้ว" : "กำหนดเอง"}
           </button>
         ))}
         {preset === "custom" && (
@@ -92,7 +92,7 @@ export default function AdminAnalyticsPage() {
               onChange={(e) => setCustomStart(e.target.value)}
               className="rounded-xl border border-border bg-surface px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none"
             />
-            <span className="text-muted">to</span>
+            <span className="text-muted">ถึง</span>
             <input
               type="date"
               value={customEnd}
@@ -113,12 +113,12 @@ export default function AdminAnalyticsPage() {
         <>
           {/* Summary cards */}
           <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatsCard title="Total Bookings" value={data.totalBookings} icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            <StatsCard title="Completed" value={data.completedBookings} color="green" icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            <StatsCard title="Cancelled" value={data.cancelledBookings} color="red" icon="M6 18L18 6M6 6l12 12" />
-            <StatsCard title="No-show" value={data.noShowCount} color="orange" icon="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            <StatsCard title="New Customers" value={data.newCustomers} color="blue" icon="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            <StatsCard title="Returning" value={data.returningCustomers} color="purple" icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+            <StatsCard title="การจองทั้งหมด" value={data.totalBookings} icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <StatsCard title="เสร็จสิ้น" value={data.completedBookings} color="green" icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <StatsCard title="ยกเลิกแล้ว" value={data.cancelledBookings} color="red" icon="M6 18L18 6M6 6l12 12" />
+            <StatsCard title="ไม่มาตามนัด" value={data.noShowCount} color="orange" icon="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <StatsCard title="ลูกค้าใหม่" value={data.newCustomers} color="blue" icon="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            <StatsCard title="ลูกค้าเก่า" value={data.returningCustomers} color="purple" icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
           </div>
 
           {/* Charts */}
@@ -126,7 +126,7 @@ export default function AdminAnalyticsPage() {
             {/* Bar chart */}
             <div className="rounded-2xl border border-border bg-surface p-6">
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">
-                Bookings per Day
+                การจองรายวัน
               </h3>
               {data.bookingsByDay.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
@@ -138,14 +138,14 @@ export default function AdminAnalyticsPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="py-12 text-center text-sm text-muted">No data for this period</p>
+                <p className="py-12 text-center text-sm text-muted">ไม่มีข้อมูลในช่วงนี้</p>
               )}
             </div>
 
             {/* Pie chart */}
             <div className="rounded-2xl border border-border bg-surface p-6">
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">
-                Bookings by Status
+                การจองตามสถานะ
               </h3>
               {data.bookingsByStatus.length > 0 ? (
                 <div className="flex items-center justify-center">
@@ -170,7 +170,7 @@ export default function AdminAnalyticsPage() {
                   </ResponsiveContainer>
                 </div>
               ) : (
-                <p className="py-12 text-center text-sm text-muted">No data for this period</p>
+                <p className="py-12 text-center text-sm text-muted">ไม่มีข้อมูลในช่วงนี้</p>
               )}
             </div>
           </div>
@@ -178,10 +178,10 @@ export default function AdminAnalyticsPage() {
           {/* Busiest info */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-border bg-surface p-5">
-              <p className="text-sm text-muted">Busiest Day</p>
+              <p className="text-sm text-muted">วันที่คนเยอะที่สุด</p>
               <p className="mt-1 text-xl font-bold text-primary">
                 {data.busiestDay
-                  ? new Date(data.busiestDay + "T00:00:00").toLocaleDateString("en-US", {
+                  ? new Date(data.busiestDay + "T00:00:00").toLocaleDateString("th-TH", {
                       weekday: "long",
                       month: "short",
                       day: "numeric",
@@ -190,7 +190,7 @@ export default function AdminAnalyticsPage() {
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-surface p-5">
-              <p className="text-sm text-muted">Busiest Time Slot</p>
+              <p className="text-sm text-muted">ช่วงเวลาที่คนเยอะที่สุด</p>
               <p className="mt-1 text-xl font-bold text-primary">
                 {data.busiestTimeSlot ?? "—"}
               </p>

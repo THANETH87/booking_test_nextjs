@@ -32,7 +32,7 @@ export default function AdminUsersPage() {
 
   const updateMutation = trpc.admin.updateUser.useMutation({
     onSuccess: () => {
-      toast("User updated", "success");
+      toast("อัปเดตผู้ใช้แล้ว", "success");
       utils.admin.getUsers.invalidate();
       setEditingId(null);
     },
@@ -41,7 +41,7 @@ export default function AdminUsersPage() {
 
   const deleteMutation = trpc.admin.deleteUser.useMutation({
     onSuccess: () => {
-      toast("User deleted", "success");
+      toast("ลบผู้ใช้แล้ว", "success");
       utils.admin.getUsers.invalidate();
     },
     onError: (err) => toast(err.message, "error"),
@@ -73,14 +73,14 @@ export default function AdminUsersPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Users
+        ผู้ใช้
       </h1>
 
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
-          placeholder="Search name, email, phone..."
+          placeholder="ค้นหาชื่อ อีเมล เบอร์โทร..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -98,7 +98,7 @@ export default function AdminUsersPage() {
         >
           {ROLES.map((r) => (
             <option key={r} value={r}>
-              {r === "ALL" ? "All Roles" : r}
+              {r === "ALL" ? "ทุกบทบาท" : r}
             </option>
           ))}
         </select>
@@ -112,7 +112,7 @@ export default function AdminUsersPage() {
         </div>
       ) : usersQuery.data?.users.length === 0 ? (
         <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          No users found.
+          ไม่พบผู้ใช้
         </p>
       ) : (
         <>
@@ -122,12 +122,12 @@ export default function AdminUsersPage() {
               <thead>
                 <tr className="border-b border-zinc-200 dark:border-zinc-700">
                   <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">ID</th>
-                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Name</th>
-                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Email</th>
-                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Phone</th>
-                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Role</th>
-                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Bookings</th>
-                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Actions</th>
+                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">ชื่อ</th>
+                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">อีเมล</th>
+                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">เบอร์โทร</th>
+                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">บทบาท</th>
+                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">การจอง</th>
+                  <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">จัดการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -182,13 +182,13 @@ export default function AdminUsersPage() {
                               disabled={updateMutation.isPending}
                               className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-200 disabled:opacity-50 dark:bg-green-900 dark:text-green-300"
                             >
-                              Save
+                              บันทึก
                             </button>
                             <button
                               onClick={() => setEditingId(null)}
                               className="rounded bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-zinc-300"
                             >
-                              Cancel
+                              ยกเลิก
                             </button>
                           </div>
                         </td>
@@ -219,18 +219,18 @@ export default function AdminUsersPage() {
                               onClick={() => startEdit(u)}
                               className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300"
                             >
-                              Edit
+                              แก้ไข
                             </button>
                             <button
                               onClick={() => {
-                                if (confirm(`Delete user ${u.firstName} ${u.lastName}?`)) {
+                                if (confirm(`ลบผู้ใช้ ${u.firstName} ${u.lastName}?`)) {
                                   deleteMutation.mutate({ userId: u.id });
                                 }
                               }}
                               disabled={deleteMutation.isPending}
                               className="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-200 disabled:opacity-50 dark:bg-red-900 dark:text-red-300"
                             >
-                              Delete
+                              ลบ
                             </button>
                           </div>
                         </td>
@@ -265,23 +265,23 @@ export default function AdminUsersPage() {
                 </div>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{u.email}</p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">{u.phone}</p>
-                <p className="text-xs text-zinc-400">{u._count.bookings} bookings</p>
+                <p className="text-xs text-zinc-400">{u._count.bookings} การจอง</p>
                 <div className="mt-3 flex gap-2">
                   <button
                     onClick={() => startEdit(u)}
                     className="rounded bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300"
                   >
-                    Edit
+                    แก้ไข
                   </button>
                   <button
                     onClick={() => {
-                      if (confirm(`Delete user ${u.firstName} ${u.lastName}?`)) {
+                      if (confirm(`ลบผู้ใช้ ${u.firstName} ${u.lastName}?`)) {
                         deleteMutation.mutate({ userId: u.id });
                       }
                     }}
                     className="rounded bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300"
                   >
-                    Delete
+                    ลบ
                   </button>
                 </div>
               </div>
@@ -296,17 +296,17 @@ export default function AdminUsersPage() {
                 disabled={page === 1}
                 className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-zinc-600"
               >
-                Previous
+                ก่อนหน้า
               </button>
               <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                Page {page} of {usersQuery.data.totalPages}
+                หน้า {page} จาก {usersQuery.data.totalPages}
               </span>
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= usersQuery.data.totalPages}
                 className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-zinc-600"
               >
-                Next
+                ถัดไป
               </button>
             </div>
           )}

@@ -25,7 +25,7 @@ export default function AdminBookingsPage() {
 
   const deleteMutation = trpc.booking.delete.useMutation({
     onSuccess: () => {
-      toast("Booking deleted", "success");
+      toast("ลบการจองแล้ว", "success");
       utils.booking.getAll.invalidate();
     },
     onError: (err) => toast(err.message, "error"),
@@ -33,7 +33,7 @@ export default function AdminBookingsPage() {
 
   const updateStatusMutation = trpc.booking.updateStatus.useMutation({
     onSuccess: () => {
-      toast("Status updated", "success");
+      toast("อัปเดตสถานะแล้ว", "success");
       utils.booking.getAll.invalidate();
     },
     onError: (err) => {
@@ -45,13 +45,13 @@ export default function AdminBookingsPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-          All Bookings
+          การจองทั้งหมด
         </h1>
         <button
           onClick={() => setShowManual(true)}
           className="rounded-xl gradient-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary/25"
         >
-          + Manual Booking
+          + จองด้วยตนเอง
         </button>
       </div>
 
@@ -67,7 +67,7 @@ export default function AdminBookingsPage() {
         >
           {STATUSES.map((s) => (
             <option key={s} value={s}>
-              {s === "ALL" ? "All Statuses" : s.replace("_", " ")}
+              {s === "ALL" ? "สถานะทั้งหมด" : { PENDING: "รอดำเนินการ", CONFIRMED: "ยืนยันแล้ว", IN_PROGRESS: "กำลังดำเนินการ", COMPLETED: "เสร็จสิ้น", CANCELLED: "ยกเลิกแล้ว" }[s] ?? s}
             </option>
           ))}
         </select>
@@ -88,7 +88,7 @@ export default function AdminBookingsPage() {
             }}
             className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400"
           >
-            Clear date
+            ล้างวันที่
           </button>
         )}
       </div>
@@ -124,17 +124,17 @@ export default function AdminBookingsPage() {
                 disabled={page === 1}
                 className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-zinc-600"
               >
-                Previous
+                ก่อนหน้า
               </button>
               <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                Page {page} of {bookingsQuery.data.totalPages}
+                หน้า {page} จาก {bookingsQuery.data.totalPages}
               </span>
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= bookingsQuery.data.totalPages}
                 className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-zinc-600"
               >
-                Next
+                ถัดไป
               </button>
             </div>
           )}

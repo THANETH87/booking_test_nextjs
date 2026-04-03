@@ -40,7 +40,7 @@ export function SlotGrid({
   if (slots.length === 0) {
     return (
       <div className="rounded-2xl border border-border bg-surface-secondary p-8 text-center">
-        <p className="text-sm text-muted">No slots available for this date.</p>
+        <p className="text-sm text-muted">ไม่มีช่วงเวลาว่างสำหรับวันนี้</p>
       </div>
     );
   }
@@ -72,7 +72,7 @@ export function SlotGrid({
                 onClick={(e) => { e.stopPropagation(); onJoinWaitlist(slot.id); }}
                 className="mt-1 block cursor-pointer text-[10px] font-medium text-primary hover:underline"
               >
-                Waitlist
+                รอคิว
               </span>
             )}
           </button>

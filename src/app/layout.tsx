@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SalonQ — Book Your Appointment",
+  title: "SalonQ — จองคิวร้านทำผม",
   description:
-    "Professional queue booking system for hair salon appointments. Book your slot online.",
+    "ระบบจองคิวร้านทำผมออนไลน์ จองง่าย สะดวก รวดเร็ว",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="th"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

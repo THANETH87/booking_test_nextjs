@@ -16,7 +16,7 @@ export default function AdminSettingsPage() {
 
   const addMutation = trpc.admin.addHoliday.useMutation({
     onSuccess: () => {
-      toast("Holiday added. Active bookings on that date have been cancelled.", "success");
+      toast("เพิ่มวันหยุดแล้ว การจองที่มีอยู่ในวันนั้นถูกยกเลิกแล้ว", "success");
       utils.admin.getHolidays.invalidate();
       setNewDate("");
       setNewReason("");
@@ -26,7 +26,7 @@ export default function AdminSettingsPage() {
 
   const removeMutation = trpc.admin.removeHoliday.useMutation({
     onSuccess: () => {
-      toast("Holiday removed", "success");
+      toast("ลบวันหยุดแล้ว", "success");
       utils.admin.getHolidays.invalidate();
     },
     onError: (err) => toast(err.message, "error"),
@@ -35,16 +35,16 @@ export default function AdminSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-        <p className="mt-1 text-muted">Manage shop holidays and day offs</p>
+        <h1 className="text-3xl font-bold text-foreground">ตั้งค่า</h1>
+        <p className="mt-1 text-muted">จัดการวันหยุดร้าน</p>
       </div>
 
       {/* Add Holiday */}
       <div className="mb-8 rounded-2xl border border-border bg-surface p-6">
-        <h2 className="mb-4 text-lg font-semibold text-foreground">Add Holiday</h2>
+        <h2 className="mb-4 text-lg font-semibold text-foreground">เพิ่มวันหยุด</h2>
         <div className="flex flex-wrap items-end gap-3">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground/80">Date</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground/80">วันที่</label>
             <input
               type="date"
               value={newDate}
@@ -53,24 +53,24 @@ export default function AdminSettingsPage() {
             />
           </div>
           <div className="flex-1">
-            <label className="mb-1.5 block text-sm font-medium text-foreground/80">Reason (optional)</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground/80">เหตุผล (ไม่บังคับ)</label>
             <input
               type="text"
               value={newReason}
               onChange={(e) => setNewReason(e.target.value)}
-              placeholder="e.g. New Year's Day"
+              placeholder="เช่น วันปีใหม่"
               className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <button
             onClick={() => {
-              if (!newDate) return toast("Please select a date", "error");
+              if (!newDate) return toast("กรุณาเลือกวันที่", "error");
               addMutation.mutate({ date: newDate, reason: newReason || undefined });
             }}
             disabled={addMutation.isPending}
             className="rounded-xl gradient-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 disabled:opacity-50"
           >
-            {addMutation.isPending ? "Adding..." : "Add Holiday"}
+            {addMutation.isPending ? "กำลังเพิ่ม..." : "เพิ่มวันหยุด"}
           </button>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function AdminSettingsPage() {
       {/* Holiday List */}
       <div className="rounded-2xl border border-border bg-surface p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">Holidays</h2>
+          <h2 className="text-lg font-semibold text-foreground">วันหยุด</h2>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setYear((y) => y - 1)}
@@ -104,7 +104,7 @@ export default function AdminSettingsPage() {
           </div>
         ) : holidaysQuery.data?.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted">
-            No holidays set for {year}
+            ยังไม่มีวันหยุดสำหรับปี {year}
           </p>
         ) : (
           <div className="flex flex-col gap-2">
@@ -117,7 +117,7 @@ export default function AdminSettingsPage() {
                 >
                   <div>
                     <span className="font-medium text-foreground">
-                      {new Date(h.date).toLocaleDateString("en-US", {
+                      {new Date(h.date).toLocaleDateString("th-TH", {
                         weekday: "short",
                         month: "long",
                         day: "numeric",
@@ -132,7 +132,7 @@ export default function AdminSettingsPage() {
                     disabled={removeMutation.isPending}
                     className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-red-600 shadow-sm hover:bg-red-50 disabled:opacity-50 dark:bg-red-900 dark:text-red-300"
                   >
-                    Remove
+                    ลบ
                   </button>
                 </div>
               );

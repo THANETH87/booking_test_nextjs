@@ -16,7 +16,7 @@ export default function MyBookingsPage() {
 
   const cancelMutation = trpc.booking.cancel.useMutation({
     onSuccess: () => {
-      toast("Booking cancelled", "success");
+      toast("ยกเลิกการจองแล้ว", "success");
       utils.booking.getMyBookings.invalidate();
     },
     onError: (err) => {
@@ -28,14 +28,14 @@ export default function MyBookingsPage() {
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">My Bookings</h1>
-          <p className="mt-1 text-muted">Track and manage your appointments</p>
+          <h1 className="text-3xl font-bold text-foreground">การจองของฉัน</h1>
+          <p className="mt-1 text-muted">ติดตามและจัดการนัดหมายของคุณ</p>
         </div>
         <Link
           href="/book"
           className="rounded-xl gradient-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-primary/25 transition-all hover:shadow-lg"
         >
-          + New Booking
+          + จองใหม่
         </Link>
       </div>
 
@@ -52,13 +52,13 @@ export default function MyBookingsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <p className="text-foreground font-medium">No bookings yet</p>
-          <p className="mt-1 text-sm text-muted">Book your first appointment today!</p>
+          <p className="text-foreground font-medium">ยังไม่มีการจอง</p>
+          <p className="mt-1 text-sm text-muted">จองนัดหมายแรกของคุณวันนี้!</p>
           <Link
             href="/book"
             className="mt-4 inline-block rounded-xl gradient-primary px-6 py-2.5 text-sm font-medium text-white shadow-md shadow-primary/25"
           >
-            Book Now
+            จองเลย
           </Link>
         </div>
       ) : (

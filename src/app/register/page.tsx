@@ -22,7 +22,7 @@ export default function RegisterPage() {
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: () => {
       utils.auth.me.invalidate();
-      toast("Account created! Welcome to SalonQ.", "success");
+      toast("สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ SalonQ", "success");
       router.push("/book");
     },
     onError: (err) => {
@@ -56,56 +56,56 @@ export default function RegisterPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Create account</h1>
-          <p className="mt-1 text-sm text-muted">Join SalonQ and book instantly</p>
+          <h1 className="text-2xl font-bold text-foreground">สมัครสมาชิก</h1>
+          <p className="mt-1 text-sm text-muted">เข้าร่วม SalonQ แล้วจองได้ทันที</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label htmlFor="firstName" className="mb-1.5 block text-sm font-medium text-foreground/80">
-                First Name
+                ชื่อ
               </label>
               <input id="firstName" value={form.firstName} onChange={update("firstName")} required className={inputClass} />
             </div>
             <div>
               <label htmlFor="lastName" className="mb-1.5 block text-sm font-medium text-foreground/80">
-                Last Name
+                นามสกุล
               </label>
               <input id="lastName" value={form.lastName} onChange={update("lastName")} required className={inputClass} />
             </div>
           </div>
           <div>
             <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground/80">
-              Email
+              อีเมล
             </label>
             <input id="email" type="email" value={form.email} onChange={update("email")} required className={inputClass} placeholder="you@example.com" />
           </div>
           <div>
             <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-foreground/80">
-              Phone
+              เบอร์โทร
             </label>
             <input id="phone" type="tel" value={form.phone} onChange={update("phone")} required className={inputClass} placeholder="0XXXXXXXXX" />
           </div>
           <div>
             <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-foreground/80">
-              Password
+              รหัสผ่าน
             </label>
-            <input id="password" type="password" value={form.password} onChange={update("password")} required minLength={8} className={inputClass} placeholder="Min 8 characters" />
+            <input id="password" type="password" value={form.password} onChange={update("password")} required minLength={8} className={inputClass} placeholder="อย่างน้อย 8 ตัวอักษร" />
           </div>
           <button
             type="submit"
             disabled={registerMutation.isPending}
             className="mt-2 rounded-xl gradient-primary py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50"
           >
-            {registerMutation.isPending ? "Creating account..." : "Register"}
+            {registerMutation.isPending ? "กำลังสมัคร..." : "สมัครสมาชิก"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-muted">
-          Already have an account?{" "}
+          มีบัญชีอยู่แล้ว?{" "}
           <Link href="/login" className="font-medium text-primary hover:underline">
-            Sign In
+            เข้าสู่ระบบ
           </Link>
         </p>
       </div>

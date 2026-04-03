@@ -21,7 +21,7 @@ export function Navbar() {
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
       utils.auth.me.invalidate();
-      toast("Logged out successfully", "success");
+      toast("ออกจากระบบสำเร็จ", "success");
       router.push("/login");
     },
   });
@@ -59,20 +59,20 @@ export function Navbar() {
                 href="/book"
                 className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${isActive("/book")}`}
               >
-                Book
+                จองคิว
               </Link>
               <Link
                 href="/my-bookings"
                 className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${isActive("/my-bookings")}`}
               >
-                My Bookings
+                การจองของฉัน
               </Link>
               {user.role === "ADMIN" && (
                 <Link
                   href="/admin"
                   className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${pathname.startsWith("/admin") ? "text-primary font-semibold" : "text-foreground/60 hover:text-foreground"}`}
                 >
-                  Admin
+                  แอดมิน
                 </Link>
               )}
 
@@ -91,7 +91,7 @@ export function Navbar() {
                 disabled={logoutMutation.isPending}
                 className="ml-1 rounded-lg px-3 py-1.5 text-sm text-foreground/60 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400"
               >
-                Logout
+                ออกจากระบบ
               </button>
             </>
           ) : (
@@ -100,13 +100,13 @@ export function Navbar() {
                 href="/login"
                 className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${isActive("/login")}`}
               >
-                Login
+                เข้าสู่ระบบ
               </Link>
               <Link
                 href="/register"
                 className="ml-1 rounded-lg gradient-primary px-4 py-1.5 text-sm font-medium text-white shadow-sm shadow-primary/25 transition-all hover:shadow-md hover:shadow-primary/30"
               >
-                Register
+                สมัครสมาชิก
               </Link>
             </>
           )}
@@ -144,14 +144,14 @@ export function Navbar() {
                   </div>
                 </div>
                 <Link href="/book" onClick={() => setMobileOpen(false)} className={`rounded-lg px-3 py-2 text-sm transition-colors ${isActive("/book")}`}>
-                  Book Appointment
+                  จองคิว
                 </Link>
                 <Link href="/my-bookings" onClick={() => setMobileOpen(false)} className={`rounded-lg px-3 py-2 text-sm transition-colors ${isActive("/my-bookings")}`}>
-                  My Bookings
+                  การจองของฉัน
                 </Link>
                 {user.role === "ADMIN" && (
                   <Link href="/admin" onClick={() => setMobileOpen(false)} className={`rounded-lg px-3 py-2 text-sm transition-colors ${isActive("/admin")}`}>
-                    Admin Panel
+                    แผงควบคุม
                   </Link>
                 )}
                 <div className="my-2 h-px bg-border" />
@@ -159,16 +159,16 @@ export function Navbar() {
                   onClick={() => { logoutMutation.mutate(); setMobileOpen(false); }}
                   className="rounded-lg px-3 py-2 text-left text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
                 >
-                  Logout
+                  ออกจากระบบ
                 </button>
               </>
             ) : (
               <>
                 <Link href="/login" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm text-foreground/70">
-                  Login
+                  เข้าสู่ระบบ
                 </Link>
                 <Link href="/register" onClick={() => setMobileOpen(false)} className="rounded-lg gradient-primary px-3 py-2 text-center text-sm font-medium text-white">
-                  Register
+                  สมัครสมาชิก
                 </Link>
               </>
             )}

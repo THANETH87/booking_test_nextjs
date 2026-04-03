@@ -18,7 +18,7 @@ export default function AdminSlotsPage() {
 
   const blockMutation = trpc.slot.blockSlot.useMutation({
     onSuccess: () => {
-      toast("Slot blocked", "success");
+      toast("บล็อกช่วงเวลาแล้ว", "success");
       utils.slot.getAvailable.invalidate();
       setBlockReason("");
     },
@@ -27,7 +27,7 @@ export default function AdminSlotsPage() {
 
   const unblockMutation = trpc.slot.unblockSlot.useMutation({
     onSuccess: () => {
-      toast("Slot unblocked", "success");
+      toast("ปลดบล็อกช่วงเวลาแล้ว", "success");
       utils.slot.getAvailable.invalidate();
     },
     onError: (err) => toast(err.message, "error"),
@@ -36,7 +36,7 @@ export default function AdminSlotsPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Manage Time Slots
+        จัดการช่วงเวลา
       </h1>
 
       <div className="mb-6">
@@ -83,7 +83,7 @@ export default function AdminSlotsPage() {
                         : "text-green-600 dark:text-green-400"
                   }`}
                 >
-                  {slot.isBlocked ? "Blocked" : slot.isBooked ? "Booked" : "Open"}
+                  {slot.isBlocked ? "ปิดให้บริการ" : slot.isBooked ? "ถูกจอง" : "ว่าง"}
                 </span>
               </div>
               {slot.isBlocked && slot.blockedReason && (
@@ -97,12 +97,12 @@ export default function AdminSlotsPage() {
                   disabled={unblockMutation.isPending}
                   className="w-full rounded bg-white px-2 py-1 text-xs font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 disabled:opacity-50 dark:bg-zinc-700 dark:text-zinc-200"
                 >
-                  Unblock
+                  ปลดบล็อก
                 </button>
               ) : !slot.isBooked ? (
                 <div className="flex gap-1">
                   <input
-                    placeholder="Reason"
+                    placeholder="เหตุผล"
                     value={blockReason}
                     onChange={(e) => setBlockReason(e.target.value)}
                     className="flex-1 rounded border border-zinc-300 px-2 py-1 text-xs dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
@@ -117,11 +117,11 @@ export default function AdminSlotsPage() {
                     disabled={blockMutation.isPending}
                     className="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-200 disabled:opacity-50 dark:bg-red-900 dark:text-red-300"
                   >
-                    Block
+                    บล็อก
                   </button>
                 </div>
               ) : (
-                <p className="text-xs text-zinc-400">Has active booking</p>
+                <p className="text-xs text-zinc-400">มีการจองอยู่</p>
               )}
             </div>
           ))}

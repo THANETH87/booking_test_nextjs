@@ -12,28 +12,28 @@ export default function Home() {
         <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
           <div className="animate-slide-up inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-white/90 glass">
             <span className="inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-            Open today 09:00 - 20:00
+            เปิดให้บริการวันนี้ 09:00 - 20:00
           </div>
           <h1 className="animate-slide-up stagger-1 text-4xl font-extrabold tracking-tight text-white sm:text-6xl">
-            Your perfect look,
+            ลุคสวยที่ใช่
             <br />
-            <span className="text-accent-light">just one tap away</span>
+            <span className="text-accent-light">แค่แตะเดียว</span>
           </h1>
           <p className="animate-slide-up stagger-2 max-w-lg text-lg text-white/70">
-            Book your salon appointment in seconds. No waiting, no phone calls — just pick your time and show up.
+            จองคิวร้านทำผมได้ในไม่กี่วินาที ไม่ต้องรอ ไม่ต้องโทร — แค่เลือกเวลาแล้วมาตามนัด
           </p>
           <div className="animate-slide-up stagger-3 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/book"
               className="rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-primary-dark shadow-lg shadow-black/10 transition-all hover:shadow-xl hover:-translate-y-0.5"
             >
-              Book Now
+              จองเลย
             </Link>
             <Link
               href="/register"
               className="rounded-xl border-2 border-white/30 px-8 py-3.5 text-base font-semibold text-white transition-all hover:bg-white/10"
             >
-              Create Account
+              สมัครสมาชิก
             </Link>
           </div>
         </div>
@@ -43,32 +43,32 @@ export default function Home() {
       <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-20">
         <div className="mb-12 text-center">
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
-            How it works
+            ขั้นตอนการจอง
           </h2>
-          <p className="mt-2 text-muted">Three simple steps to your appointment</p>
+          <p className="mt-2 text-muted">3 ขั้นตอนง่ายๆ สู่การนัดหมายของคุณ</p>
         </div>
         <div className="grid gap-8 sm:grid-cols-3">
           {[
             {
               step: "1",
-              title: "Pick a date",
-              desc: "Browse available dates for the next 14 days",
+              title: "เลือกวันที่",
+              desc: "ดูวันที่ว่างล่วงหน้า 14 วัน",
               icon: (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               ),
             },
             {
               step: "2",
-              title: "Choose your slot",
-              desc: "Select from available 30-minute time slots",
+              title: "เลือกเวลา",
+              desc: "เลือกจากช่วงเวลาว่าง 30 นาที",
               icon: (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               ),
             },
             {
               step: "3",
-              title: "You're booked!",
-              desc: "Get instant confirmation and manage anytime",
+              title: "จองสำเร็จ!",
+              desc: "ได้รับการยืนยันทันที จัดการได้ตลอดเวลา",
               icon: (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
               ),
@@ -97,9 +97,9 @@ export default function Home() {
       <section className="border-t border-border bg-surface-secondary px-4 py-10">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-8 sm:gap-16">
           {[
-            { label: "Opening", value: "09:00 - 20:00" },
-            { label: "Duration", value: "30 min" },
-            { label: "Max daily", value: "20 slots" },
+            { label: "เวลาเปิด", value: "09:00 - 20:00" },
+            { label: "ระยะเวลา", value: "30 นาที" },
+            { label: "คิวต่อวัน", value: "20 คิว" },
           ].map((item) => (
             <div key={item.label} className="text-center">
               <p className="text-2xl font-bold text-primary">{item.value}</p>

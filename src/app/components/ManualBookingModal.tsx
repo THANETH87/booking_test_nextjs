@@ -35,7 +35,7 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
 
   const createMutation = trpc.admin.createManualBooking.useMutation({
     onSuccess: () => {
-      toast("Booking created!", "success");
+      toast("สร้างการจองสำเร็จ!", "success");
       utils.booking.getAll.invalidate();
       onClose();
     },
@@ -45,14 +45,14 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    if (!selectedSlotId) return toast("Please select a slot", "error");
+    if (!selectedSlotId) return toast("กรุณาเลือกช่วงเวลา", "error");
 
     if (tab === "user") {
-      if (!selectedUserId) return toast("Please select a user", "error");
+      if (!selectedUserId) return toast("กรุณาเลือกผู้ใช้", "error");
       createMutation.mutate({ userId: selectedUserId, slotId: selectedSlotId, note: note || undefined });
     } else {
       if (!guestForm.firstName || !guestForm.lastName || !guestForm.phone) {
-        return toast("Please fill in guest details", "error");
+        return toast("กรุณากรอกข้อมูลบุคคลทั่วไป", "error");
       }
       createMutation.mutate({
         guestFirstName: guestForm.firstName,
@@ -72,7 +72,7 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
       <div className="fixed inset-0 bg-black/50 glass" onClick={onClose} />
       <div className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-surface p-6 shadow-2xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-foreground">Manual Booking</h2>
+          <h2 className="text-xl font-bold text-foreground">จองด้วยตนเอง</h2>
           <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted hover:bg-surface-secondary">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -90,7 +90,7 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
                 tab === t ? "bg-surface text-foreground shadow-sm" : "text-muted"
               }`}
             >
-              {t === "user" ? "Existing User" : "Guest"}
+              {t === "user" ? "สมาชิก" : "บุคคลทั่วไป"}
             </button>
           ))}
         </div>
@@ -99,7 +99,7 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
         {tab === "user" ? (
           <div className="mb-6">
             <input
-              placeholder="Search by name, email, phone..."
+              placeholder="ค้นหาด้วยชื่อ อีเมล เบอร์โทร..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={inputClass}
@@ -128,16 +128,16 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
           </div>
         ) : (
           <div className="mb-6 grid grid-cols-2 gap-3">
-            <input placeholder="First Name" value={guestForm.firstName} onChange={(e) => setGuestForm((f) => ({ ...f, firstName: e.target.value }))} className={inputClass} />
-            <input placeholder="Last Name" value={guestForm.lastName} onChange={(e) => setGuestForm((f) => ({ ...f, lastName: e.target.value }))} className={inputClass} />
-            <input placeholder="Email (optional)" type="email" value={guestForm.email} onChange={(e) => setGuestForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} />
-            <input placeholder="Phone (0XXXXXXXXX)" value={guestForm.phone} onChange={(e) => setGuestForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} />
+            <input placeholder="ชื่อ" value={guestForm.firstName} onChange={(e) => setGuestForm((f) => ({ ...f, firstName: e.target.value }))} className={inputClass} />
+            <input placeholder="นามสกุล" value={guestForm.lastName} onChange={(e) => setGuestForm((f) => ({ ...f, lastName: e.target.value }))} className={inputClass} />
+            <input placeholder="อีเมล (ไม่บังคับ)" type="email" value={guestForm.email} onChange={(e) => setGuestForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} />
+            <input placeholder="เบอร์โทร (0XXXXXXXXX)" value={guestForm.phone} onChange={(e) => setGuestForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} />
           </div>
         )}
 
         {/* Slot selection */}
         <div className="mb-4">
-          <p className="mb-3 text-sm font-medium text-muted">Select date & time</p>
+          <p className="mb-3 text-sm font-medium text-muted">เลือกวันและเวลา</p>
           <DatePicker selectedDate={selectedDate} onSelect={(d) => { setSelectedDate(d); setSelectedSlotId(null); }} />
         </div>
 
@@ -154,7 +154,7 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
 
         <div className="mb-4">
           <input
-            placeholder="Note (optional)"
+            placeholder="หมายเหตุ (ไม่บังคับ)"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             className={inputClass}
@@ -166,7 +166,7 @@ export function ManualBookingModal({ isOpen, onClose }: ManualBookingModalProps)
           disabled={createMutation.isPending}
           className="w-full rounded-xl gradient-primary py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 disabled:opacity-50"
         >
-          {createMutation.isPending ? "Creating..." : "Create Booking"}
+          {createMutation.isPending ? "กำลังสร้าง..." : "สร้างการจอง"}
         </button>
       </div>
     </div>

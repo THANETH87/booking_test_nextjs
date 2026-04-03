@@ -17,7 +17,7 @@ export default function LoginPage() {
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: () => {
       utils.auth.me.invalidate();
-      toast("Welcome back!", "success");
+      toast("ยินดีต้อนรับกลับมา!", "success");
       router.push("/book");
     },
     onError: (err) => {
@@ -45,14 +45,14 @@ export default function LoginPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
-          <p className="mt-1 text-sm text-muted">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-foreground">ยินดีต้อนรับกลับมา</h1>
+          <p className="mt-1 text-sm text-muted">เข้าสู่ระบบบัญชีของคุณ</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground/80">
-              Email
+              อีเมล
             </label>
             <input
               id="email"
@@ -66,7 +66,7 @@ export default function LoginPage() {
           </div>
           <div>
             <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-foreground/80">
-              Password
+              รหัสผ่าน
             </label>
             <input
               id="password"
@@ -75,7 +75,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-foreground shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              placeholder="Min 8 characters"
+              placeholder="อย่างน้อย 8 ตัวอักษร"
             />
           </div>
           <button
@@ -83,14 +83,14 @@ export default function LoginPage() {
             disabled={loginMutation.isPending}
             className="mt-2 rounded-xl gradient-primary py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50"
           >
-            {loginMutation.isPending ? "Signing in..." : "Sign In"}
+            {loginMutation.isPending ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-muted">
-          Don&apos;t have an account?{" "}
+          ยังไม่มีบัญชี?{" "}
           <Link href="/register" className="font-medium text-primary hover:underline">
-            Register
+            สมัครสมาชิก
           </Link>
         </p>
       </div>

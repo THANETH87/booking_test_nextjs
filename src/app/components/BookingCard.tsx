@@ -28,11 +28,11 @@ const statusConfig: Record<string, { color: string; bg: string; icon: string }> 
 };
 
 const statusLabels: Record<string, string> = {
-  PENDING: "Pending",
-  CONFIRMED: "Confirmed",
-  IN_PROGRESS: "In Progress",
-  COMPLETED: "Completed",
-  CANCELLED: "Cancelled",
+  PENDING: "รอดำเนินการ",
+  CONFIRMED: "ยืนยันแล้ว",
+  IN_PROGRESS: "กำลังดำเนินการ",
+  COMPLETED: "เสร็จสิ้น",
+  CANCELLED: "ยกเลิกแล้ว",
 };
 
 export function BookingCard({ booking, onCancel, onReschedule, isCancelling }: BookingCardProps) {
@@ -56,7 +56,7 @@ export function BookingCard({ booking, onCancel, onReschedule, isCancelling }: B
                 {booking.slot.startTime} - {booking.slot.endTime}
               </p>
               <p className="text-sm text-muted">
-                {date.toLocaleDateString("en-US", {
+                {date.toLocaleDateString("th-TH", {
                   weekday: "short",
                   month: "long",
                   day: "numeric",
@@ -84,7 +84,7 @@ export function BookingCard({ booking, onCancel, onReschedule, isCancelling }: B
               onClick={() => onReschedule(booking.id, booking.slot.id)}
               className="rounded-xl border border-primary/30 bg-white px-4 py-2 text-sm font-medium text-primary shadow-sm transition-all hover:bg-primary/5 hover:shadow-md dark:border-primary/50 dark:bg-primary/10"
             >
-              Reschedule
+              เลื่อนนัด
             </button>
           )}
           {canCancel && onCancel && (
@@ -93,7 +93,7 @@ export function BookingCard({ booking, onCancel, onReschedule, isCancelling }: B
               disabled={isCancelling}
               className="rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 shadow-sm transition-all hover:bg-red-50 hover:shadow-md disabled:opacity-50 dark:border-red-800 dark:bg-red-950 dark:text-red-400"
             >
-              {isCancelling ? "..." : "Cancel"}
+              {isCancelling ? "..." : "ยกเลิก"}
             </button>
           )}
         </div>

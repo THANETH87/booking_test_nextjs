@@ -13,8 +13,8 @@ export function DatePicker({ selectedDate, onSelect, holidays = [] }: DatePicker
     const d = new Date();
     d.setDate(d.getDate() + i);
     const value = d.toISOString().split("T")[0];
-    const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
-    const label = d.toLocaleDateString("en-US", { day: "numeric" });
+    const dayName = d.toLocaleDateString("th-TH", { weekday: "short" });
+    const label = d.toLocaleDateString("th-TH", { day: "numeric" });
     dates.push({ label, value, dayName, isToday: i === 0 });
   }
 
@@ -38,10 +38,10 @@ export function DatePicker({ selectedDate, onSelect, holidays = [] }: DatePicker
           </span>
           <span className="text-xl font-bold">{d.label}</span>
           {holidays.includes(d.value) ? (
-            <span className="mt-0.5 text-[10px] font-medium text-red-500">Closed</span>
+            <span className="mt-0.5 text-[10px] font-medium text-red-500">ปิด</span>
           ) : d.isToday ? (
             <span className={`mt-0.5 text-[10px] font-medium ${selectedDate === d.value ? "text-white/80" : "text-primary"}`}>
-              Today
+              วันนี้
             </span>
           ) : null}
         </button>

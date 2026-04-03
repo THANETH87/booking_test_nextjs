@@ -32,7 +32,7 @@ export function RescheduleModal({
 
   const rescheduleMutation = trpc.booking.reschedule.useMutation({
     onSuccess: () => {
-      toast("Appointment rescheduled!", "success");
+      toast("เลื่อนนัดสำเร็จ!", "success");
       utils.booking.getMyBookings.invalidate();
       onClose();
     },
@@ -48,7 +48,7 @@ export function RescheduleModal({
       <div className="fixed inset-0 bg-black/50 glass" onClick={onClose} />
       <div className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-surface p-6 shadow-2xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-foreground">Reschedule Appointment</h2>
+          <h2 className="text-xl font-bold text-foreground">เลื่อนนัดหมาย</h2>
           <button
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-muted hover:bg-surface-secondary"
@@ -60,13 +60,13 @@ export function RescheduleModal({
         </div>
 
         <div className="mb-6">
-          <p className="mb-3 text-sm font-medium text-muted">Select new date</p>
+          <p className="mb-3 text-sm font-medium text-muted">เลือกวันใหม่</p>
           <DatePicker selectedDate={selectedDate} onSelect={(d) => { setSelectedDate(d); setSelectedSlotId(null); }} holidays={holidays} />
         </div>
 
         {selectedDate && (
           <div className="mb-6">
-            <p className="mb-3 text-sm font-medium text-muted">Select new time</p>
+            <p className="mb-3 text-sm font-medium text-muted">เลือกเวลาใหม่</p>
             <SlotGrid
               slots={(slotsQuery.data ?? []).filter((s) => s.id !== currentSlotId)}
               selectedSlotId={selectedSlotId}
@@ -82,7 +82,7 @@ export function RescheduleModal({
             disabled={rescheduleMutation.isPending}
             className="w-full rounded-xl gradient-primary py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 disabled:opacity-50"
           >
-            {rescheduleMutation.isPending ? "Rescheduling..." : "Confirm Reschedule"}
+            {rescheduleMutation.isPending ? "กำลังเลื่อนนัด..." : "ยืนยันเลื่อนนัด"}
           </button>
         )}
       </div>

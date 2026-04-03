@@ -26,6 +26,14 @@ interface BookingTableProps {
   isUpdating?: boolean;
 }
 
+const statusLabels: Record<string, string> = {
+  PENDING: "รอดำเนินการ",
+  CONFIRMED: "ยืนยันแล้ว",
+  IN_PROGRESS: "กำลังดำเนินการ",
+  COMPLETED: "เสร็จสิ้น",
+  CANCELLED: "ยกเลิกแล้ว",
+};
+
 const statusColors: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
   CONFIRMED: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
@@ -36,16 +44,16 @@ const statusColors: Record<string, string> = {
 
 const nextStatus: Record<string, { label: string; value: string }[]> = {
   PENDING: [
-    { label: "Confirm", value: "CONFIRMED" },
-    { label: "Cancel", value: "CANCELLED" },
+    { label: "ยืนยัน", value: "CONFIRMED" },
+    { label: "ยกเลิก", value: "CANCELLED" },
   ],
   CONFIRMED: [
-    { label: "Start", value: "IN_PROGRESS" },
-    { label: "Cancel", value: "CANCELLED" },
+    { label: "เริ่ม", value: "IN_PROGRESS" },
+    { label: "ยกเลิก", value: "CANCELLED" },
   ],
   IN_PROGRESS: [
-    { label: "Complete", value: "COMPLETED" },
-    { label: "Cancel", value: "CANCELLED" },
+    { label: "เสร็จสิ้น", value: "COMPLETED" },
+    { label: "ยกเลิก", value: "CANCELLED" },
   ],
   COMPLETED: [],
   CANCELLED: [],
@@ -60,7 +68,7 @@ export function BookingTable({
   if (bookings.length === 0) {
     return (
       <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-        No bookings found.
+        ไม่พบการจอง
       </p>
     );
   }
@@ -73,11 +81,11 @@ export function BookingTable({
           <thead>
             <tr className="border-b border-zinc-200 dark:border-zinc-700">
               <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">ID</th>
-              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Customer</th>
-              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Date</th>
-              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Time</th>
-              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Status</th>
-              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">Actions</th>
+              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">ลูกค้า</th>
+              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">วันที่</th>
+              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">เวลา</th>
+              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">สถานะ</th>
+              <th className="px-3 py-2 font-medium text-zinc-500 dark:text-zinc-400">จัดการ</th>
             </tr>
           </thead>
           <tbody>
@@ -98,7 +106,7 @@ export function BookingTable({
                   </div>
                 </td>
                 <td className="px-3 py-2 text-zinc-700 dark:text-zinc-300">
-                  {new Date(b.slot.date).toLocaleDateString("en-US", {
+                  {new Date(b.slot.date).toLocaleDateString("th-TH", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
@@ -111,7 +119,7 @@ export function BookingTable({
                   <span
                     className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[b.status] ?? ""}`}
                   >
-                    {b.status.replace("_", " ")}
+                    {statusLabels[b.status] ?? b.status}
                   </span>
                 </td>
                 <td className="px-3 py-2">
@@ -133,12 +141,12 @@ export function BookingTable({
                     {onDelete && (
                       <button
                         onClick={() => {
-                          if (confirm(`Delete booking #${b.id}?`)) onDelete(b.id);
+                          if (confirm(`ลบการจอง #${b.id}?`)) onDelete(b.id);
                         }}
                         disabled={isUpdating}
                         className="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-200 disabled:opacity-50 dark:bg-red-900 dark:text-red-300"
                       >
-                        Delete
+                        ลบ
                       </button>
                     )}
                   </div>
@@ -163,11 +171,11 @@ export function BookingTable({
               <span
                 className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[b.status] ?? ""}`}
               >
-                {b.status.replace("_", " ")}
+                {statusLabels[b.status] ?? b.status}
               </span>
             </div>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {new Date(b.slot.date).toLocaleDateString("en-US", {
+              {new Date(b.slot.date).toLocaleDateString("th-TH", {
                 month: "short",
                 day: "numeric",
               })}{" "}
@@ -194,7 +202,7 @@ export function BookingTable({
               {onDelete && (
                 <button
                   onClick={() => {
-                    if (confirm(`Delete booking #${b.id}?`)) onDelete(b.id);
+                    if (confirm(`ลบการจอง #${b.id}?`)) onDelete(b.id);
                   }}
                   disabled={isUpdating}
                   className="rounded bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300"
