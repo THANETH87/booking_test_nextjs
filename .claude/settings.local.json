@@ -5,7 +5,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(bun run:*)",
-      "Bash(bun add:*)"
+      "Bash(bun add:*)",
+      "Bash(grep -n \"mutation\\(async \\(\\)\" src/server/routers/*.ts)",
+      "Bash(bun install:*)",
+      "Bash(bunx prisma:*)"
     ]
   }
 }
