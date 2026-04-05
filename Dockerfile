@@ -41,11 +41,11 @@ COPY --from=build /app/.next/static ./.next/static
 # Copy public folder
 COPY --from=build /app/public ./public
 
-# Copy Prisma schema + engine for runtime migrations
+# Copy Prisma schema + generated client + engine for runtime migrations
 COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=build /app/node_modules/prisma ./node_modules/prisma
-COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=build /app/prisma.config.ts ./prisma.config.ts
+COPY --from=build /app/src/generated/prisma ./src/generated/prisma
+COPY --from=build /app/node_modules ./node_modules
 
 USER nextjs
 

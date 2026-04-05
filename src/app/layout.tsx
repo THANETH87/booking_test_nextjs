@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { TRPCProvider } from "@/lib/trpc-provider";
 import { ToastProvider } from "@/app/components/Toast";
 import { Navbar } from "@/app/components/Navbar";
+import { AIChatWidget } from "@/app/components/AIChatWidget";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({
           <ToastProvider>
             <Navbar />
             <main className="flex flex-1 flex-col">{children}</main>
+            <AIChatWidget />
           </ToastProvider>
         </TRPCProvider>
       </body>

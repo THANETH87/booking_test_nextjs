@@ -10,6 +10,8 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.66",
+    "@ai-sdk/react": "^3.0.147",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "@tanstack/react-query": "^5.96.0",
@@ -17,6 +19,7 @@
     "@trpc/next": "^11.16.0",
     "@trpc/react-query": "^11.16.0",
     "@trpc/server": "^11.16.0",
+    "ai": "^6.0.145",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.2",
     "next": "16.2.2",

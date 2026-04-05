@@ -1,21 +1,4 @@
 services:
-  db:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: salonq
-      POSTGRES_PASSWORD: salonq_password
-      POSTGRES_DB: salonq
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U salonq"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   app:
     build:
       context: .
@@ -23,11 +6,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://salonq:salonq_password@db:5432/salonq
+      DATABASE_URL: postgres://postgres:fU7L0T6UDxpSfnc0jNuIE8QWTqMfq2L7F6xI9XSgNzMOwYHPhRG9Fj4zJeL0i90k@185.241.210.48:7800/postgres
       JWT_SECRET: change-me-in-production
       EMAIL_HOST: ""
       EMAIL_PORT: "587"
@@ -35,6 +15,3 @@ services:
       EMAIL_PASS: ""
       CRON_SECRET: change-me-in-production
       NEXT_PUBLIC_BASE_URL: http://localhost:3000
-
-volumes:
-  pgdata:
