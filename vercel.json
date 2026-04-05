@@ -1,4 +1,0 @@
-{
-  "buildCommand": "prisma migrate deploy && bun run build",
-  "installCommand": "bun install"
-}
